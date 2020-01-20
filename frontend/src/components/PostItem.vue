@@ -25,7 +25,7 @@
         name: "PostItem",
         data() {
             return {
-                post: null
+                post: {name:'', created:null, content:''}
             }
         },
         mounted() {

@@ -21,6 +21,16 @@ func (h *ListHandler) GetAll(w http.ResponseWriter, r *http.Request, _ httproute
 	if err != nil {
 		log.Println(err)
 	}
+
+	postsByYear := make(map[string][]*Post)
+	for _, post := range posts {
+		year := post.GetYear()
+		if _, ok := postsByYear[year]; !ok {
+			postsByYear[year] = []*Post{}
+		}
+		postsByYear[year] = append(postsByYear[year], post)
+	}
+
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
