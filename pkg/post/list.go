@@ -34,7 +34,7 @@ func (h *ListHandler) GetAll(w http.ResponseWriter, r *http.Request, _ httproute
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(posts); err != nil {
+	if err := json.NewEncoder(w).Encode(postsByYear); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
