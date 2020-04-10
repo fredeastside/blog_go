@@ -8,30 +8,26 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/julienschmidt/httprouter"
 )
 
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	db, err := db.NewDB(fmt.Sprintf(
-		"%s:%s@/%s?parseTime=true",
+	conn, err := db.NewDB(fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?parseTime=true",
 		os.Getenv("DATABASE_USER"),
 		os.Getenv("DATABASE_PASSWORD"),
+		os.Getenv("DATABASE_HOST"),
+		os.Getenv("DATABASE_PORT"),
 		os.Getenv("DATABASE_NAME"),
 	),
 	)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	defer conn.Close()
 
-	posts := post.NewPostsRepository(db)
+	posts := post.NewPostsRepository(conn)
 	postsListHandler := post.NewListHandler(posts)
 
 	router := httprouter.New()
@@ -49,5 +45,5 @@ func main() {
 	router.GET("/api/post", postsListHandler.GetAll)
 	router.GET("/api/post/:slug", postsListHandler.GetOne)
 
-	log.Fatal(http.ListenAndServe(":"+os.Getenv("APP_PORT"), router))
+	log.Fatal(http.ListenAndServe(os.Getenv("BACKEND_HOST")+":"+os.Getenv("BACKEND_PORT"), router))
 }
