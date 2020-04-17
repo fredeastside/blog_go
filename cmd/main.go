@@ -45,5 +45,7 @@ func main() {
 	router.GET("/api/post", postsListHandler.GetAll)
 	router.GET("/api/post/:slug", postsListHandler.GetOne)
 
-	log.Fatal(http.ListenAndServe(os.Getenv("BACKEND_HOST")+":"+os.Getenv("BACKEND_PORT"), router))
+	addr := os.Getenv("BACKEND_HOST")+":"+os.Getenv("BACKEND_PORT")
+	log.Printf("Server start on %s", addr)
+	log.Fatal(http.ListenAndServe(addr, router))
 }

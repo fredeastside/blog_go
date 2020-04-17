@@ -42,7 +42,8 @@ func (r *PostsRepository) GetAll() ([]*Post, error) {
 
 func (r *PostsRepository) GetBySlug(slug string) (*Post, error) {
 	var post Post
-	err := r.db.QueryRow("SELECT id, created, name, slug, content FROM posts WHERE slug = ?", slug).Scan(&post.ID, &post.Created, &post.Name, &post.Slug, &post.Content)
+	err := r.db.QueryRow("SELECT id, created, name, slug, content FROM posts WHERE slug = ?", slug).
+		Scan(&post.ID, &post.Created, &post.Name, &post.Slug, &post.Content)
 	if err != nil {
 		return nil, err
 	}

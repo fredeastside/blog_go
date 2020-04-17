@@ -1,45 +1,33 @@
-source .env
-
-MIGRATE_CMD=migrate -source file://./migrations -database $(DATABASE_URL)
-
-run:
-	go run cmd/main.go
-
-rundb:
-	docker-compose up -d
-
-stopdb:
-	docker-compose down
-
-migrate:
-	$(MIGRATE_CMD) up
-
-rollback:
-	$(MIGRATE_CMD) down
+.PHONY: build
 
 build:
-	cd cmd && go build -o ../$(PROJECT_NAME)
+	@cd frontend && npm run-script build
+	@echo "[✔️] Frontend build complete!"
 
-build-linux:
-	cd cmd && GOOS=linux GOARCH=amd64 go build -o ./$(PROJECT_NAME)
+certbot-test:
+	@chmod +x ./webserver/register_ssl.sh
+	@sudo ./webserver/register_ssl.sh \
+								--domains "$(DOMAINS)" \
+								--email $(EMAIL) \
+								--data-path ./webserver/certbot \
+								--staging 1
 
-start: build
-	./$(PROJECT_NAME)
+certbot-prod:
+	@chmod +x ./webserver/register_ssl.sh
+	@sudo ./webserver/register_ssl.sh \
+								--domains "$(DOMAINS)" \
+								--email $(EMAIL) \
+								--data-path ./webserver/certbot \
+								--staging 0
 
-docker-build:
-	docker build -t $(PROJECT_NAME) .
+run-db:
+	@docker-compose \
+					-f docker-compose.yml \
+					-f docker-compose.dev.yml \
+					up -d --build
 
-docker-run:
-	docker run -p 80:80 -v -m=2G --memory-swap=2G $(PROJECT_NAME)
-
-docker-stats:
-	docker stats $(PROJECT_NAME)
-
-pprof: build
-	time ./$(PROJECT_NAME) > memory.profile
-
-run-frontend:
-	cd frontend && npm run serve
-
-build-frontend:
-	cd frontend && npm run build
+deploy-prod:
+	@docker-compose \
+					-f docker-compose.yml \
+					-f docker-compose.prod.yml \
+					up -d --build --force-recreate
