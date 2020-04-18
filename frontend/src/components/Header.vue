@@ -1,6 +1,7 @@
 <template>
   <header id="header">
     <router-link to="/">
+      <div id="logo" :style="{ backgroundImage: 'url('+ require('@/assets/logo.png') +')' }"></div>
       <div id="title">
         <h1>fredrsf.ru</h1>
       </div>

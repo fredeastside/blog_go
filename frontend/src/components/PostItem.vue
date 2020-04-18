@@ -19,6 +19,8 @@
 
 <script>
 import http from "@/http";
+import "highlight.js/styles/atom-one-dark.css";
+import hljs from "highlight.js"
 
 export default {
   name: "PostItem",
@@ -33,7 +35,19 @@ export default {
       .then(response => {
         this.post = response.data;
       })
-      .catch();
+      .catch((error)=>{
+        console.log(error);
+      });
+  },
+  updated() {
+    this.highlightPost();
+  },
+  methods: {
+    highlightPost() {
+      document.querySelectorAll('pre code').forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    }
   }
 };
 </script>
