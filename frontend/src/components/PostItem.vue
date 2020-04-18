@@ -29,7 +29,7 @@ export default {
       post: { name: "", created: null, content: "" }
     };
   },
-  mounted() {
+  created() {
     http
       .get("/post/" + this.$route.params.slug)
       .then(response => {

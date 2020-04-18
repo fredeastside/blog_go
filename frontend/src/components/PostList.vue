@@ -31,13 +31,15 @@ export default {
       postsList: []
     };
   },
-  mounted() {
+  created() {
     http
       .get("/post")
       .then(response => {
         this.postsList = response.data;
       })
-      .catch();
+      .catch((error) => {
+        console.log(error);
+      });
   }
 };
 </script>
