@@ -5,19 +5,19 @@ build:
 	@echo "[✔️] Frontend build complete!"
 
 certbot-test:
-	@chmod +x ./webserver/register_ssl.sh
-	@sudo ./webserver/register_ssl.sh \
+	@chmod +x ./docker/frontend/register_ssl.sh
+	@sudo ./docker/frontend/register_ssl.sh \
 								--domains "$(DOMAINS)" \
 								--email $(EMAIL) \
-								--data-path ./webserver/certbot \
+								--data-path ./docker/certbot \
 								--staging 1
 
 certbot-prod:
-	@chmod +x ./webserver/register_ssl.sh
-	@sudo ./webserver/register_ssl.sh \
+	@chmod +x ./docker/frontend/register_ssl.sh
+	@sudo ./docker/frontend/register_ssl.sh \
 								--domains "$(DOMAINS)" \
 								--email $(EMAIL) \
-								--data-path ./webserver/certbot \
+								--data-path ./docker/certbot \
 								--staging 0
 
 run-db:

@@ -12,12 +12,13 @@ services:
     depends_on:
       - backend
     volumes:
+      - ./docker/frontend/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/frontend/default.conf:/etc/nginx/conf.d/default.conf
-      - ./docker/frontend/fredrsf.conf:/etc/nginx/conf.d/fredrsf.conf
+      - ./docker/frontend/fredrsf.conf:/etc/nginx/sites-enabled/fredrsf.conf
       - ./docker/certbot/conf:/etc/letsencrypt
       - ./docker/certbot/www:/var/www/certbot
     ports:
       - 80:80
+      - 443:443
     restart: unless-stopped
-    networks:
-      - fredrsf
+    network_mode: "host"

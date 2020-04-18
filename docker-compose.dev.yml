@@ -17,5 +17,3 @@ services:
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "3306:3306"
-    networks:
-      - fredrsf

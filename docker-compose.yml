@@ -9,12 +9,9 @@ services:
       dockerfile: docker/backend/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - db
     ports:
       - 8080:8080
-    networks:
-      - fredrsf
+    network_mode: "host"
 
   frontend:
     container_name: frontend
@@ -26,21 +23,17 @@ services:
     depends_on:
       - backend
     volumes:
+      - ./docker/frontend/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/frontend/default.conf:/etc/nginx/conf.d/default.conf
       - ./docker/certbot/conf:/etc/letsencrypt
       - ./docker/certbot/www:/var/www/certbot
     ports:
       - 80:80
     restart: unless-stopped
-    networks:
-      - fredrsf
-    #command: /bin/bash -c "envsubst '$$BACKEND_HOST $$BACKEND_PORT' < /etc/nginx/conf.d/default.conf > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
 
   certbot:
     container_name: certbot
     image: certbot/certbot
-    networks:
-      - nginx_net
     volumes:
       - ./docker/certbot/conf:/etc/letsencrypt
       - ./docker/certbot/www:/var/www/certbot
@@ -48,7 +41,3 @@ services:
     entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"
     depends_on:
       - frontend
-
-networks:
-  fredrsf:
-    name: fredrsf
