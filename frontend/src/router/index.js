@@ -25,9 +25,13 @@ const routes = [
     component: () => import('../views/PostPage.vue')
   },
   {
-    path: '*',
+    path: '/404',
     name: '404',
     component: () => import('../views/NotFound.vue')
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
 ]
 

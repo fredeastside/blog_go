@@ -54,6 +54,10 @@ export default {
     http
       .get("/post/" + this.$route.params.slug)
       .then(response => {
+        if (response.data === null) {
+          this.$router.push({name: '404'});
+          return;
+        }
         this.post = response.data;
       })
       .catch((error)=>{
